@@ -25,9 +25,9 @@ Route::get('/', function () {
 
 Route::get('/categories', [CategoriesController::class, 'index']);
 
-Route::get('/categories/{categoryName}', [NewsController::class, 'index']);
+Route::get('/categories/{categoryId}', [NewsController::class, 'index']);
 
-Route::get('/categories/{categoryName}/{articleId}', [NewsController::class, 'show']);
+Route::get('/news/{newsId}', [NewsController::class, 'show']);
 
 Route::get('/create', [CreateArticlePageController::class, 'index']);
 
