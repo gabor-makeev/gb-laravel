@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\IndexController;
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\NewsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,22 +17,31 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [IndexController::class, 'index'])
+    ->name('index');
 
-Route::get('/welcome/{username}', static function(string $username): string {
-    return "Hello, {$username}";
-});
+Route::get('/login', [LoginController::class, 'index'])
+    ->name('login');
 
 Route::get('/about', static function(): string {
     return "Information about the project";
 });
 
-Route::get('/news', static function(): string {
-    return "News";
-});
+Route::get('/categories', [CategoryController::class, 'index'])
+    ->name('category.index');
 
-Route::get('/news/{id}', static function(int $id): string {
-    return "News #{$id}";
+Route::get('/news/{category}', [NewsController::class, 'index'])
+    ->whereIn('category', ['movies', 'tv series', 'music', 'video games', 'off-topic'])
+    ->name('news.index');
+
+Route::get('/news/{category}/{id}', [NewsController::class, 'show'])
+    ->whereIn('category', ['movies', 'tv series', 'music', 'video games', 'off-topic'])
+    ->whereNumber('id')
+    ->name('news.show');
+
+Route::get('/news/create', [NewsController::class, 'create'])
+    ->name('news.create');
+
+Route::get('/welcome/{username}', static function(string $username): string {
+    return "Hello, {$username}";
 });
