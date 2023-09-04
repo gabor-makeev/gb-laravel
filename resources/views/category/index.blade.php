@@ -1,10 +1,18 @@
 @extends('layouts.main')
 @section('title')| Categories @stop
 @section('content')
-    <h1>Categories</h1>
-    <ul>
-        @foreach($categories as $category)
-            <li><a href="{{ route('news.index', ['category' => $category]) }}">{{ ucfirst($category) }}</a></li>
-        @endforeach
-    </ul>
+    <div class="p-4 p-md-5 mb-4 rounded text-body-emphasis bg-body-secondary">
+        <div class="col-lg-6 px-0">
+            <h1 class="display-6 fst-italic">Categories</h1>
+        </div>
+    </div>
+    <div class="d-flex justify-content-center">
+        <div class="btn-group">
+            @forelse($categories as $category)
+                <a href="{{ route('news.index', ['category' => $category]) }}" class="btn btn-primary" aria-current="page">{{ ucfirst($category) }}</a>
+            @empty
+                <p>There are no categories</p>
+            @endforelse
+        </div>
+    </div>
 @endsection
