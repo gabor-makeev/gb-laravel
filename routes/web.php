@@ -4,6 +4,9 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\NewsController;
+use App\Http\Controllers\Admin\NewsController as AdminNewsController;
+use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
+use App\Http\Controllers\Admin\IndexController as AdminIndexController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -35,13 +38,31 @@ Route::prefix('news')->name('news.')
         Route::get('/{category}', [NewsController::class, 'index'])
             ->whereIn('category', ['movies', 'tv series', 'music', 'video games', 'off-topic'])
             ->name('index');
-        Route::get('/{category}/{id}', [NewsController::class, 'show'])
+        Route::get('/{category}/{uuid}', [NewsController::class, 'show'])
             ->whereIn('category', ['movies', 'tv series', 'music', 'video games', 'off-topic'])
-            ->whereNumber('id')
+            ->whereUuid('uuid')
             ->name('show');
         Route::get('/create', [NewsController::class, 'create'])
             ->name('create');
 });
+
+Route::prefix('admin')->name('admin.')
+    ->group(function () {
+        Route::get('/', AdminIndexController::class)
+            ->name('index');
+        Route::prefix('news')->name('news.')
+            ->group(function () {
+                Route::get('/', [AdminNewsController::class, 'index'])
+                    ->name('index');
+                Route::get('/create', [AdminNewsController::class, 'create'])
+                    ->name('create');
+            });
+        Route::prefix('categories')->name('categories.')
+            ->group(function () {
+                Route::get('/', [AdminCategoryController::class, 'index'])
+                    ->name('index');
+            });
+    });
 
 Route::get('/welcome/{username}', static function(string $username): string {
     return "Hello, {$username}";

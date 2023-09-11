@@ -14,7 +14,7 @@
                         <strong class="d-inline-block mb-2 text-primary-emphasis">{{ ucfirst($post['category']) }}</strong>
                         <h3 class="mb-0">{{ $post['title'] }}</h3>
                         <p class="card-text mb-auto">{{ $post['description'] }}</p>
-                        <a href="{{ route('news.show', ['category' => $post['category'], 'id' => $post['id']]) }}" class="icon-link gap-1 icon-link-hover stretched-link">
+                        <a href="{{ route('news.show', ['category' => $post['category'], 'uuid' => $post['uuid']]) }}" class="icon-link gap-1 icon-link-hover stretched-link">
                             Read more
                             <svg class="bi"><use xlink:href="#chevron-right"/></svg>
                         </a>

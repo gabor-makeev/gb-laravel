@@ -23,13 +23,8 @@ class NewsController extends Controller
         ]);
     }
 
-    public function show(string $category, int $id): View
+    public function show(string $category, string $uuid): View
     {
-        return view('news.show', ['post' => $this->findNews($category, $id)]);
-    }
-
-    public function create(): View
-    {
-        return view('news.create');
+        return view('news.show', ['post' => $this->findNews($category, $uuid)]);
     }
 }

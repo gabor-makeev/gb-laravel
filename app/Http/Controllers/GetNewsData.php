@@ -18,7 +18,7 @@ trait GetNewsData {
         foreach ($this->categories as $category) {
             for ($i = 1; $i <= $newsQuantity; $i++) {
                 $news[] = [
-                    'id' => $i,
+                    'uuid' => fake()->uuid(),
                     'title' => fake()->text(100),
                     'content' => fake()->text(1000),
                     'description' => fake()->text(150),
@@ -37,7 +37,7 @@ trait GetNewsData {
 
         for ($i = 1; $i <= $newsQuantity; $i++) {
             $news[] = [
-                'id' => $i,
+                'uuid' => fake()->uuid(),
                 'title' => fake()->text(100),
                 'content' => fake()->text(1000),
                 'description' => fake()->text(150),
@@ -48,10 +48,10 @@ trait GetNewsData {
         return $news;
     }
 
-    protected function findNews(string $category, int $id): array
+    protected function findNews(string $category, string $uuid): array
     {
         return [
-            'id' => $id,
+            'uuid' => $uuid,
             'title' => fake()->text(100),
             'content' => fake()->text(1000),
             'description' => fake()->text(150),
