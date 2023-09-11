@@ -5,7 +5,7 @@
         <h1 class="h2">List of categories</h1>
         <div class="btn-toolbar mb-2 mb-md-0">
             <div class="btn-group me-2">
-                <a href="#" class="btn btn-sm btn-outline-secondary">Create</a>
+                <a href="{{ route('admin.categories.create') }}" class="btn btn-sm btn-outline-secondary">Create</a>
             </div>
         </div>
     </div>
@@ -20,7 +20,7 @@
             <tbody>
             @forelse($categories as $category)
                 <tr>
-                    <td>{{ ucfirst($category) }}</td>
+                    <td>{{ ucfirst($category['name']) }}</td>
                 </tr>
             @empty
                 <p>There are no categories</p>
