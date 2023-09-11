@@ -1,4 +1,4 @@
-@extends('layouts.main')
+@extends('layouts.admin')
 @section('title')| Create a post @stop
 @section('content')
     <form action="#">
