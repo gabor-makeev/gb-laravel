@@ -7,6 +7,8 @@ use Illuminate\View\View;
 
 class NewsController extends Controller
 {
+    use GetNewsData;
+
     public function index(string $category = null): View
     {
         if ($category) {
