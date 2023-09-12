@@ -9,7 +9,7 @@
     <div class="d-flex justify-content-center">
         <div class="btn-group">
             @forelse($categories as $category)
-                <a href="{{ route('news.index', ['category' => $category]) }}" class="btn btn-primary" aria-current="page">{{ ucfirst($category) }}</a>
+                <a href="{{ route('news.index', ['category' => $category['name']]) }}" class="btn btn-primary" aria-current="page">{{ ucfirst($category['name']) }}</a>
             @empty
                 <p>There are no categories</p>
             @endforelse

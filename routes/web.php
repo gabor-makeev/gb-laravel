@@ -56,11 +56,17 @@ Route::prefix('admin')->name('admin.')
                     ->name('index');
                 Route::get('/create', [AdminNewsController::class, 'create'])
                     ->name('create');
+                Route::post('/store', [AdminNewsController::class, 'store'])
+                    ->name('store');
             });
         Route::prefix('categories')->name('categories.')
             ->group(function () {
                 Route::get('/', [AdminCategoryController::class, 'index'])
                     ->name('index');
+                Route::get('create', [AdminCategoryController::class, 'create'])
+                    ->name('create');
+                Route::post('store', [AdminCategoryController::class, 'store'])
+                    ->name('store');
             });
     });
 

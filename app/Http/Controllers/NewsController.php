@@ -25,6 +25,12 @@ class NewsController extends Controller
 
     public function show(string $category, string $uuid): View
     {
-        return view('news.show', ['post' => $this->findNews($category, $uuid)]);
+        $post = $this->findNews($uuid);
+
+        if (!$post) {
+            abort(404);
+        }
+
+        return view('news.show', ['category' => $category, 'post' => $post]);
     }
 }
