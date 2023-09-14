@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\GetNewsData;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 
@@ -15,7 +16,9 @@ class CategoryController extends Controller
 
     public function index(): View
     {
-        return view('admin.categories.index')->with('categories', $this->getNewsCategories());
+        $categories = DB::table('categories')->get();
+
+        return view('admin.categories.index')->with('categories', $categories);
     }
 
     public function create(): View

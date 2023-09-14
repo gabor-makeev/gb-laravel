@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\GetNewsData;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 
@@ -15,7 +16,12 @@ class NewsController extends Controller
 
     public function index(): View
     {
-        return view('admin.news.index')->with('newsList', $this->getAllNews());
+        $news = DB::table('news')
+            ->join('categories', 'categories.id', 'news.category_id')
+            ->select('news.*', 'categories.name as category_name')
+            ->get();
+
+        return view('admin.news.index')->with('news', $news);
     }
 
     public function create(): View

@@ -22,13 +22,13 @@
             </tr>
             </thead>
             <tbody>
-            @forelse($newsList as $news)
+            @forelse($news as $post)
                 <tr>
-                    <td>{{ $news['uuid'] }}</td>
-                    <td>{{ $news['title'] }}</td>
-                    <td>{{ $news['content'] }}</td>
-                    <td>{{ $news['description'] }}</td>
-                    <td>{{ $news['category'] }}</td>
+                    <td>{{ $post->id }}</td>
+                    <td>{{ $post->title }}</td>
+                    <td>{{ $post->content }}</td>
+                    <td>{{ $post->description }}</td>
+                    <td>{{ $post->category_name }}</td>
                 </tr>
             @empty
                 <p>There are no news</p>

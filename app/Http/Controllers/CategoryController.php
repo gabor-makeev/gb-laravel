@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class CategoryController extends Controller
@@ -11,6 +12,8 @@ class CategoryController extends Controller
 
     public function index(): View
     {
-        return view('category.index', ['categories' => $this->getNewsCategories()]);
+        $categories = DB::table('categories')->get();
+
+        return view('category.index', ['categories' => $categories]);
     }
 }

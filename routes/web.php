@@ -35,12 +35,12 @@ Route::get('/categories', [CategoryController::class, 'index'])
 
 Route::prefix('news')->name('news.')
     ->group(function () {
-        Route::get('/{category}', [NewsController::class, 'index'])
-            ->whereIn('category', ['movies', 'tv series', 'music', 'video games', 'off-topic'])
+        Route::get('/{categoryId}', [NewsController::class, 'index'])
+            ->whereNumber('categoryId')
             ->name('index');
-        Route::get('/{category}/{uuid}', [NewsController::class, 'show'])
-            ->whereIn('category', ['movies', 'tv series', 'music', 'video games', 'off-topic'])
-            ->whereUuid('uuid')
+        Route::get('/{categoryId}/{postId}', [NewsController::class, 'show'])
+            ->whereNumber('categoryId')
+            ->whereNumber('postId')
             ->name('show');
         Route::get('/create', [NewsController::class, 'create'])
             ->name('create');
