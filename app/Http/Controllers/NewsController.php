@@ -8,8 +8,6 @@ use Illuminate\View\View;
 
 class NewsController extends Controller
 {
-    use GetNewsData;
-
     public function index(int $categoryId = null): View
     {
         $categoryName = 'All';

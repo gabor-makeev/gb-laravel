@@ -8,8 +8,6 @@ use Illuminate\View\View;
 
 class CategoryController extends Controller
 {
-    use GetNewsData;
-
     public function index(): View
     {
         $categories = DB::table('categories')->get();

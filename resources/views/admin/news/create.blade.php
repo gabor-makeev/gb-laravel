@@ -19,7 +19,7 @@
             <label for="category" class="form-label">Category</label>
             <select name="category" id="category">
                 @foreach($categories as $category)
-                    <option value="{{ $category['name'] }}">{{ ucfirst($category['name']) }}</option>
+                    <option value="{{ $category->id }}">{{ ucfirst($category->name) }}</option>
                 @endforeach
             </select>
         </div>

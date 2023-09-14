@@ -3,17 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\GetNewsData;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class CategoryController extends Controller
 {
-    use GetNewsData;
-
     public function index(): View
     {
         $categories = DB::table('categories')->get();
@@ -28,12 +24,10 @@ class CategoryController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        $category = [
-            'uuid' => (string) Str::uuid(),
-            'name' => $request->input('name'),
-        ];
-
-        $this->saveCategory($category);
+        DB::table('categories')->insert([
+            'name' => $request['name'],
+            'created_at' => now()
+        ]);
 
         return redirect(route('admin.categories.index'));
     }
