@@ -27,10 +27,15 @@ class NewsController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
+        $postImage = $request->file('image');
+
+        $postImage->move(public_path('storage'), $postImage->getClientOriginalName());
+
         $post = [
             'title' => $request->input('title'),
             'description' => $request->input('description'),
             'content' => $request->input('content'),
+            'image_url' => 'storage/' . $postImage->getClientOriginalName(),
             'category_id' => $request->input('category'),
             'created_at' => now()
         ];
