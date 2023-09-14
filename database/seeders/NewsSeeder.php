@@ -32,6 +32,7 @@ class NewsSeeder extends Seeder
                     'category_id' => $seedCategoryId,
                     'created_at' => now(),
                     'status' => Status::getEnums()[array_rand(Status::getEnums())],
+                    'author' => 'Seeder',
                 ];
             }
         }

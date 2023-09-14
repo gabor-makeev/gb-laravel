@@ -38,6 +38,7 @@ class NewsController extends Controller
             'content' => $request->input('content'),
             'category_id' => $request->input('category'),
             'status' => $request->input('status'),
+            'author' => $request->input('author'),
             'created_at' => now()
         ];
 

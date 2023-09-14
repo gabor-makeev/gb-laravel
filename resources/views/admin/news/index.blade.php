@@ -21,6 +21,7 @@
                 <th scope="col">Category</th>
                 <th scope="col">Status</th>
                 <th scope="col">Image</th>
+                <th scope="col">Author</th>
             </tr>
             </thead>
             <tbody>
@@ -33,6 +34,7 @@
                     <td>{{ $post->category_name }}</td>
                     <td>{{ $post->status }}</td>
                     <td><img style="max-width: 100px; max-height: 100px" alt="post image" src="{{ $post->image_url ? asset($post->image_url) : asset('storage/placeholder.png') }}"></td>
+                    <td>{{ $post->author }}</td>
                 </tr>
             @empty
                 <p>There are no news</p>
