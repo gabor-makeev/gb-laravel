@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\News\Status;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -22,23 +23,29 @@ class NewsController extends Controller
 
     public function create(): View
     {
-        return view('admin.news.create')->with('categories', DB::table('categories')->get());
+        return view('admin.news.create')
+            ->with('categories', DB::table('categories')->get())
+            ->with('statuses', Status::getEnums());
     }
 
     public function store(Request $request): RedirectResponse
     {
         $postImage = $request->file('image');
 
-        $postImage->move(public_path('storage'), $postImage->getClientOriginalName());
-
         $post = [
             'title' => $request->input('title'),
             'description' => $request->input('description'),
             'content' => $request->input('content'),
-            'image_url' => 'storage/' . $postImage->getClientOriginalName(),
             'category_id' => $request->input('category'),
+            'status' => $request->input('status'),
             'created_at' => now()
         ];
+
+        if ($postImage) {
+            $postImage->move(public_path('storage'), $postImage->getClientOriginalName());
+
+            $post['image_url'] = 'storage/' . $postImage->getClientOriginalName();
+        }
 
         $postId = DB::table('news')->insertGetId($post);
 

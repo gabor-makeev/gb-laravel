@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\News\Status;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -29,7 +30,8 @@ class NewsSeeder extends Seeder
                     'description' => fake()->text(1000),
                     'content' => fake()->text(10000),
                     'category_id' => $seedCategoryId,
-                    'created_at' => now()
+                    'created_at' => now(),
+                    'status' => Status::getEnums()[array_rand(Status::getEnums())],
                 ];
             }
         }

@@ -27,6 +27,14 @@
                 @endforeach
             </select>
         </div>
+        <div class="mb-3">
+            <label for="status" class="form-label">Status</label>
+            <select name="status" id="status">
+                @foreach($statuses as $status)
+                    <option value="{{ $status }}">{{ ucfirst($status) }}</option>
+                @endforeach
+            </select>
+        </div>
         <div class="col-auto">
             <button type="submit" class="btn btn-primary mb-3">Create</button>
         </div>
