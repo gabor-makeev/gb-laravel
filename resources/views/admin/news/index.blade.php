@@ -19,16 +19,22 @@
                 <th scope="col">Content</th>
                 <th scope="col">Description</th>
                 <th scope="col">Category</th>
+                <th scope="col">Status</th>
+                <th scope="col">Image</th>
+                <th scope="col">Author</th>
             </tr>
             </thead>
             <tbody>
-            @forelse($newsList as $news)
+            @forelse($news as $post)
                 <tr>
-                    <td>{{ $news['uuid'] }}</td>
-                    <td>{{ $news['title'] }}</td>
-                    <td>{{ $news['content'] }}</td>
-                    <td>{{ $news['description'] }}</td>
-                    <td>{{ $news['category'] }}</td>
+                    <td>{{ $post->id }}</td>
+                    <td>{{ $post->title }}</td>
+                    <td>{{ $post->content }}</td>
+                    <td>{{ $post->description }}</td>
+                    <td>{{ $post->category_name }}</td>
+                    <td>{{ $post->status }}</td>
+                    <td><img style="max-width: 100px; max-height: 100px" alt="post image" src="{{ $post->image_url ? asset($post->image_url) : asset('storage/placeholder.png') }}"></td>
+                    <td>{{ $post->author }}</td>
                 </tr>
             @empty
                 <p>There are no news</p>

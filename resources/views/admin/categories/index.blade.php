@@ -20,7 +20,7 @@
             <tbody>
             @forelse($categories as $category)
                 <tr>
-                    <td>{{ ucfirst($category['name']) }}</td>
+                    <td>{{ ucfirst($category->name) }}</td>
                 </tr>
             @empty
                 <p>There are no categories</p>
