@@ -29,7 +29,7 @@ class NewsController extends Controller
         $category = Category::find($categoryId);
         $post = News::active()->find($postId);
 
-        if (!$post) {
+        if (!$post || $category->id !== $post->category->id) {
             abort(404);
         }
 

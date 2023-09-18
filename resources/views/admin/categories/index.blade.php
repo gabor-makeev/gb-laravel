@@ -15,12 +15,14 @@
             <thead>
             <tr>
                 <th scope="col">Name</th>
+                <th scope="col">Actions</th>
             </tr>
             </thead>
             <tbody>
             @forelse($categories as $category)
                 <tr>
                     <td>{{ ucfirst($category->name) }}</td>
+                    <td><a class="text-decoration-none" href="{{ route('admin.categories.edit', ['category' => $category]) }}">✏️</a>️ | <form method="post" class="d-inline" action="{{ route('admin.categories.delete', $category) }}">@csrf @method('DELETE')<input type="submit" value="🗑" class="bg-transparent border-0"></form></td>
                 </tr>
             @empty
                 <p>There are no categories</p>

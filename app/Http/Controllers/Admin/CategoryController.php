@@ -36,4 +36,33 @@ class CategoryController extends Controller
             return back()->with('error', 'Category was not created! Please try again.');
         }
     }
+
+    public function edit(Category $category): View
+    {
+        return view('admin.categories.edit', ['category' => $category]);
+    }
+
+    public function update(Request $request, Category $category): RedirectResponse
+    {
+        $category->name = $request->input('name');
+
+        try {
+            $category->save();
+
+            return redirect(route('admin.categories.index'))->with('success', 'Category successfully updated');
+        } catch (QueryException) {
+            return back()->with('error', 'Category was not updated! Please try again.');
+        }
+    }
+
+    public function destroy(Category $category): RedirectResponse
+    {
+        try {
+            $category->delete();
+
+            return redirect(route('admin.categories.index'))->with('success', 'Category successfully deleted');
+        } catch (QueryException) {
+            return back()->with('error', 'Category was not deleted! Please try again.');
+        }
+    }
 }
