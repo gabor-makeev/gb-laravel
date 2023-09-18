@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\News\Status;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -16,11 +18,17 @@ class News extends Model
         'content',
         'image_url',
         'category_id',
-        'status'
+        'status',
+        'author'
     ];
 
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function scopeActive(Builder $query): void
+    {
+        $query->where('status', Status::ACTIVE->value);
     }
 }

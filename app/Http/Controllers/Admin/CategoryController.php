@@ -3,16 +3,17 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class CategoryController extends Controller
 {
     public function index(): View
     {
-        $categories = DB::table('categories')->get();
+        $categories = Category::paginate(10);
 
         return view('admin.categories.index')->with('categories', $categories);
     }
@@ -24,11 +25,15 @@ class CategoryController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        DB::table('categories')->insert([
-            'name' => $request['name'],
-            'created_at' => now()
-        ]);
+        $data = $request->only(['name']);
+        $category = new Category($data);
 
-        return redirect(route('admin.categories.index'));
+        try {
+            $category->save();
+
+            return redirect(route('admin.categories.index'))->with('success', 'Category successfully created');
+        } catch (QueryException) {
+            return back()->with('error', 'Category was not created! Please try again.');
+        }
     }
 }

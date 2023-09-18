@@ -31,7 +31,7 @@
                     <td>{{ $post->title }}</td>
                     <td>{{ $post->content }}</td>
                     <td>{{ $post->description }}</td>
-                    <td>{{ $post->category_name }}</td>
+                    <td>{{ $post->category->name }}</td>
                     <td>{{ $post->status }}</td>
                     <td><img style="max-width: 100px; max-height: 100px" alt="post image" src="{{ $post->image_url ? asset($post->image_url) : asset('storage/placeholder.png') }}"></td>
                     <td>{{ $post->author }}</td>
@@ -41,5 +41,6 @@
             @endforelse
             </tbody>
         </table>
+        {{ $news->links() }}
     </div>
 @endsection

@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class CategoryController extends Controller
 {
     public function index(): View
     {
-        $categories = DB::table('categories')->get();
+        $categories = Category::paginate(5);
 
         return view('category.index', ['categories' => $categories]);
     }

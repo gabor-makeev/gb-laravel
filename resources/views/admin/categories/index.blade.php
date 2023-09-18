@@ -28,4 +28,5 @@
             </tbody>
         </table>
     </div>
+    {{ $categories->links() }}
 @endsection
