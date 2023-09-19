@@ -175,5 +175,6 @@ Auto
 
     <script src="{{ asset('assets/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('assets/js/dashboard.js') }}"></script>
+    @stack('js')
   </body>
 </html>

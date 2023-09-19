@@ -10,6 +10,13 @@
         </div>
     </div>
     <h2>News</h2>
+    <label for="filter">Filter by status</label>
+    <select id="filter">
+        <option>All</option>
+        @foreach(\App\Enums\News\Status::getEnums() as $status)
+            <option @selected(request()->get('filter') === $status)>{{ ucfirst($status) }}</option>
+        @endforeach
+    </select>
     <div class="table-responsive small">
         <table class="table table-striped table-sm">
             <thead>
@@ -46,3 +53,11 @@
         {{ $news->links() }}
     </div>
 @endsection
+@push('js')
+    <script>
+        let filter = document.getElementById('filter');
+        filter.addEventListener('change', (e) => {
+            location.href = '?filter=' + e.target.value.toLowerCase();
+        })
+    </script>
+@endpush

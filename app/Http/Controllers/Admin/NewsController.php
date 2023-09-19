@@ -13,9 +13,21 @@ use Illuminate\View\View;
 
 class NewsController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View|RedirectResponse
     {
-        $news = News::paginate(10);
+        $filter = $request->input('filter');
+
+        if ($filter === 'all') {
+            return redirect(route('admin.news.index'));
+        }
+
+        $newsQuery = News::query();
+
+        if ($filter) {
+            $newsQuery = $newsQuery->where('status', $filter);
+        }
+
+        $news = $newsQuery->paginate(10)->withQueryString();
 
         return view('admin.news.index')->with('news', $news);
     }
