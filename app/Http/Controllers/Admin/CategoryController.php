@@ -25,6 +25,8 @@ class CategoryController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
+        $request->flash();
+
         $data = $request->only(['name']);
         $category = new Category($data);
 
@@ -44,6 +46,8 @@ class CategoryController extends Controller
 
     public function update(Request $request, Category $category): RedirectResponse
     {
+        $request->flash();
+
         $category->name = $request->input('name');
 
         try {

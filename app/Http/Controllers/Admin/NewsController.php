@@ -29,6 +29,8 @@ class NewsController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
+        $request->flash();
+
         $data = $request->only([
             'title',
             'description',
@@ -68,6 +70,8 @@ class NewsController extends Controller
 
     public function update(Request $request, News $post): RedirectResponse
     {
+        $request->flash();
+
         $data = $request->only([
             'title',
             'description',
