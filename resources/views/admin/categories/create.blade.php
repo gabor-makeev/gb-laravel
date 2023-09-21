@@ -1,6 +1,11 @@
 @extends('layouts.admin')
 @section('title')| Create a category @stop
 @section('content')
+    @if($errors->any())
+        @foreach($errors->all() as $error)
+            <x-admin.alert type="danger" :message="$error"/>
+        @endforeach
+    @endif
     <form method="post" action="{{ route('admin.categories.store') }}">
         @csrf
         <div class="mb-3">

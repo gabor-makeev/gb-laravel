@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\Category\StoreCategoryRequest;
+use App\Http\Requests\Admin\Category\UpdateCategoryRequest;
 use App\Models\Category;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\RedirectResponse;
@@ -23,11 +25,9 @@ class CategoryController extends Controller
         return view('admin.categories.create');
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(StoreCategoryRequest $request): RedirectResponse
     {
-        $request->flash();
-
-        $data = $request->only(['name']);
+        $data = $request->validated();
         $category = new Category($data);
 
         try {
@@ -44,11 +44,10 @@ class CategoryController extends Controller
         return view('admin.categories.edit', ['category' => $category]);
     }
 
-    public function update(Request $request, Category $category): RedirectResponse
+    public function update(UpdateCategoryRequest $request, Category $category): RedirectResponse
     {
-        $request->flash();
-
-        $category->name = $request->input('name');
+        $data = $request->validated();
+        $category->fill($data);
 
         try {
             $category->save();
