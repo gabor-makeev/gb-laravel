@@ -163,12 +163,18 @@ Auto
     @include('components.admin.sidebar')
 
     <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-      @yield('content')
+        @if(session()->has('success'))
+            <x-admin.alert type="success" :message="session()->get('success')"/>
+        @elseif(session()->has('error'))
+            <x-admin.alert type="danger" :message="session()->get('error')"/>
+        @endif
+        @yield('content')
     </main>
   </div>
 </div>
 
     <script src="{{ asset('assets/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('assets/js/dashboard.js') }}"></script>
+    @stack('js')
   </body>
 </html>

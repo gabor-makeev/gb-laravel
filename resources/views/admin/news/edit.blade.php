@@ -1,8 +1,9 @@
 @extends('layouts.admin')
-@section('title')| Create a post @stop
+@section('title')| Edit the "{{ $post->title }}" post @stop
 @section('content')
-    <form method="post" enctype="multipart/form-data" action="{{ route('admin.news.store') }}">
+    <form method="post" enctype="multipart/form-data" action="{{ route('admin.news.update', $post) }}">
         @csrf
+        @method('PUT')
         <div class="mb-3">
             <label for="title" class="form-label">Title</label>
             <input type="text" class="form-control" id="title" name="title" placeholder="Some article title" value="{{ old('title') }}">
@@ -40,7 +41,7 @@
             <input type="text" class="form-control" id="author" name="author" placeholder="Some author" value="{{ old('author') }}">
         </div>
         <div class="col-auto">
-            <button type="submit" class="btn btn-primary mb-3">Create</button>
+            <button type="submit" class="btn btn-primary mb-3">Edit</button>
         </div>
     </form>
 @endsection

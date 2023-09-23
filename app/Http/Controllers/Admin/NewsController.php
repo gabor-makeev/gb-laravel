@@ -4,19 +4,30 @@ namespace App\Http\Controllers\Admin;
 
 use App\Enums\News\Status;
 use App\Http\Controllers\Controller;
+use App\Models\Category;
+use App\Models\News;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class NewsController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View|RedirectResponse
     {
-        $news = DB::table('news')
-            ->join('categories', 'categories.id', 'news.category_id')
-            ->select('news.*', 'categories.name as category_name')
-            ->get();
+        $filter = $request->input('filter');
+
+        if ($filter === 'all') {
+            return redirect(route('admin.news.index'));
+        }
+
+        $newsQuery = News::query();
+
+        if ($filter) {
+            $newsQuery = $newsQuery->where('status', $filter);
+        }
+
+        $news = $newsQuery->paginate(10)->withQueryString();
 
         return view('admin.news.index')->with('news', $news);
     }
@@ -24,35 +35,93 @@ class NewsController extends Controller
     public function create(): View
     {
         return view('admin.news.create')
-            ->with('categories', DB::table('categories')->get())
+            ->with('categories', Category::all())
             ->with('statuses', Status::getEnums());
     }
 
     public function store(Request $request): RedirectResponse
     {
-        $postImage = $request->file('image');
+        $request->flash();
 
-        $post = [
-            'title' => $request->input('title'),
-            'description' => $request->input('description'),
-            'content' => $request->input('content'),
-            'category_id' => $request->input('category'),
-            'status' => $request->input('status'),
-            'author' => $request->input('author'),
-            'created_at' => now()
-        ];
+        $data = $request->only([
+            'title',
+            'description',
+            'content',
+            'status',
+            'author'
+        ]);
+        $data['category_id'] = $request->input(['category']);
+        $post = new News($data);
+        $postImage = $request->file('image');
 
         if ($postImage) {
             $postImage->move(public_path('storage'), $postImage->getClientOriginalName());
 
-            $post['image_url'] = 'storage/' . $postImage->getClientOriginalName();
+            $post->image_url = 'storage/' . $postImage->getClientOriginalName();
         }
 
-        $postId = DB::table('news')->insertGetId($post);
+        try {
+            $post->save();
 
-        return redirect(route('news.show', [
-            'categoryId' => $post['category_id'],
-            'postId' => $postId
-        ]));
+            return redirect(route('news.show', [
+                'categoryId' => $post->category->id,
+                'postId' => $post->id
+            ]));
+        } catch (QueryException) {
+            return back()->with('error', 'The news post was not created! Please try again.');
+        }
+    }
+
+    public function edit(News $post): View
+    {
+        return view('admin.news.edit')
+            ->with('post', $post)
+            ->with('categories', Category::all())
+            ->with('statuses', Status::getEnums());
+    }
+
+    public function update(Request $request, News $post): RedirectResponse
+    {
+        $request->flash();
+
+        $data = $request->only([
+            'title',
+            'description',
+            'content',
+            'status',
+            'author'
+        ]);
+        $data['category_id'] = $request->input(['category']);
+        $postImage = $request->file('image');
+
+        $post->fill($data);
+
+        if ($postImage) {
+            $postImage->move(public_path('storage'), $postImage->getClientOriginalName());
+
+            $post->image_url = 'storage/' . $postImage->getClientOriginalName();
+        }
+
+        try {
+            $post->save();
+
+            return redirect(route('news.show', [
+                'categoryId' => $post->category->id,
+                'postId' => $post->id
+            ]));
+        } catch (QueryException) {
+            return back()->with('error', 'The news post was not edited! Please try again.');
+        }
+    }
+
+    public function destroy(News $post): RedirectResponse
+    {
+        try {
+            $post->delete();
+
+            return redirect(route('admin.news.index'))->with('success', 'Post successfully deleted');
+        } catch (QueryException) {
+            return back()->with('error', 'Post was not deleted! Please try again.');
+        }
     }
 }

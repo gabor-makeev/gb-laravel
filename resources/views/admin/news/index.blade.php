@@ -10,6 +10,13 @@
         </div>
     </div>
     <h2>News</h2>
+    <label for="filter">Filter by status</label>
+    <select id="filter">
+        <option>All</option>
+        @foreach(\App\Enums\News\Status::getEnums() as $status)
+            <option @selected(request()->get('filter') === $status)>{{ ucfirst($status) }}</option>
+        @endforeach
+    </select>
     <div class="table-responsive small">
         <table class="table table-striped table-sm">
             <thead>
@@ -22,6 +29,7 @@
                 <th scope="col">Status</th>
                 <th scope="col">Image</th>
                 <th scope="col">Author</th>
+                <th scope="col">Actions</th>
             </tr>
             </thead>
             <tbody>
@@ -31,15 +39,25 @@
                     <td>{{ $post->title }}</td>
                     <td>{{ $post->content }}</td>
                     <td>{{ $post->description }}</td>
-                    <td>{{ $post->category_name }}</td>
+                    <td>{{ $post->category->name }}</td>
                     <td>{{ $post->status }}</td>
                     <td><img style="max-width: 100px; max-height: 100px" alt="post image" src="{{ $post->image_url ? asset($post->image_url) : asset('storage/placeholder.png') }}"></td>
                     <td>{{ $post->author }}</td>
+                    <td><a class="text-decoration-none" href="{{ route('admin.news.edit', ['post' => $post]) }}">✏️</a>️ | <form method="post" class="d-inline" action="{{ route('admin.news.delete', $post) }}">@csrf @method('DELETE')<input type="submit" value="🗑" class="bg-transparent border-0"></form></td>
                 </tr>
             @empty
                 <p>There are no news</p>
             @endforelse
             </tbody>
         </table>
+        {{ $news->links() }}
     </div>
 @endsection
+@push('js')
+    <script>
+        let filter = document.getElementById('filter');
+        filter.addEventListener('change', (e) => {
+            location.href = '?filter=' + e.target.value.toLowerCase();
+        })
+    </script>
+@endpush
