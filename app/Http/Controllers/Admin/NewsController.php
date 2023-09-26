@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Enums\News\Status;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\News\StoreNewsRequest;
+use App\Http\Requests\Admin\News\UpdateNewsRequest;
 use App\Models\Category;
 use App\Models\News;
 use Illuminate\Database\QueryException;
@@ -39,25 +41,16 @@ class NewsController extends Controller
             ->with('statuses', Status::getEnums());
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(StoreNewsRequest $request): RedirectResponse
     {
-        $request->flash();
+        $data = $request->validated();
 
-        $data = $request->only([
-            'title',
-            'description',
-            'content',
-            'status',
-            'author'
-        ]);
-        $data['category_id'] = $request->input(['category']);
         $post = new News($data);
-        $postImage = $request->file('image');
 
-        if ($postImage) {
-            $postImage->move(public_path('storage'), $postImage->getClientOriginalName());
+        if (isset($data['image'])) {
+            $data['image']->move(public_path('storage'), $data['image']->getClientOriginalName());
 
-            $post->image_url = 'storage/' . $postImage->getClientOriginalName();
+            $post->image_url = 'storage/' . $data['image']->getClientOriginalName();
         }
 
         try {
@@ -80,26 +73,16 @@ class NewsController extends Controller
             ->with('statuses', Status::getEnums());
     }
 
-    public function update(Request $request, News $post): RedirectResponse
+    public function update(UpdateNewsRequest $request, News $post): RedirectResponse
     {
-        $request->flash();
-
-        $data = $request->only([
-            'title',
-            'description',
-            'content',
-            'status',
-            'author'
-        ]);
-        $data['category_id'] = $request->input(['category']);
-        $postImage = $request->file('image');
+        $data = $request->validated();
 
         $post->fill($data);
 
-        if ($postImage) {
-            $postImage->move(public_path('storage'), $postImage->getClientOriginalName());
+        if (isset($data['image'])) {
+            $data['image']->move(public_path('storage'), $data['image']->getClientOriginalName());
 
-            $post->image_url = 'storage/' . $postImage->getClientOriginalName();
+            $post->image_url = 'storage/' . $data['image']->getClientOriginalName();
         }
 
         try {

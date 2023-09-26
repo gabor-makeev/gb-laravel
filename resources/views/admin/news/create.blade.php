@@ -1,6 +1,11 @@
 @extends('layouts.admin')
 @section('title')| Create a post @stop
 @section('content')
+    @if($errors->any())
+        @foreach($errors->all() as $error)
+            <x-admin.alert type="danger" :message="$error"/>
+        @endforeach
+    @endif
     <form method="post" enctype="multipart/form-data" action="{{ route('admin.news.store') }}">
         @csrf
         <div class="mb-3">
@@ -21,9 +26,9 @@
         </div>
         <div class="mb-3">
             <label for="category" class="form-label">Category</label>
-            <select name="category" id="category">
+            <select name="category_id" id="category">
                 @foreach($categories as $category)
-                    <option value="{{ $category->id }}" @selected(old('category') == $category->id)>{{ ucfirst($category->name) }}</option>
+                    <option value="{{ $category->id }}" @selected(old('category_id') == $category->id)>{{ ucfirst($category->name) }}</option>
                 @endforeach
             </select>
         </div>
