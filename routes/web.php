@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NewsController;
@@ -69,6 +70,13 @@ Route::prefix('admin')->name('admin.')
                     ->name('update');
                 Route::delete('/delete/{category}', [AdminCategoryController::class, 'destroy'])
                     ->name('delete');
+            });
+        Route::prefix('users')->name('users.')
+            ->group(function () {
+                Route::get('/', [AdminUserController::class, 'index'])
+                    ->name('index');
+                Route::put('/updateIsAdmin/{user}', [AdminUserController::class, 'updateIsAdmin'])
+                    ->name('updateIsAdmin');
             });
     });
 
