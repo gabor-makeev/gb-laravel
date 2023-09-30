@@ -1,4 +1,4 @@
-@extends('layouts.main')
+@extends('layouts.app')
 @section('title')| {{ $categoryName }}: {{ $post->title }} @stop
 @section('content')
     @if($post)

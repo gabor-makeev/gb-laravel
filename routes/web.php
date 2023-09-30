@@ -1,8 +1,8 @@
 <?php
 
+use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\IndexController;
-use App\Http\Controllers\LoginController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\Admin\NewsController as AdminNewsController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
@@ -20,15 +20,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [IndexController::class, 'index'])
-    ->name('index');
-
-Route::get('/login', [LoginController::class, 'index'])
-    ->name('login');
-
-Route::get('/about', static function(): string {
-    return "Information about the project";
-});
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/categories', [CategoryController::class, 'index'])
     ->name('category.index');
@@ -45,6 +37,7 @@ Route::prefix('news')->name('news.')
 });
 
 Route::prefix('admin')->name('admin.')
+    ->middleware(['auth', 'is.admin'])
     ->group(function () {
         Route::get('/', AdminIndexController::class)
             ->name('index');
@@ -78,8 +71,17 @@ Route::prefix('admin')->name('admin.')
                 Route::delete('/delete/{category}', [AdminCategoryController::class, 'destroy'])
                     ->name('delete');
             });
+        Route::prefix('users')->name('users.')
+            ->group(function () {
+                Route::get('/', [AdminUserController::class, 'index'])
+                    ->name('index');
+                Route::put('/updateIsAdmin/{user}', [AdminUserController::class, 'updateIsAdmin'])
+                    ->name('updateIsAdmin');
+            });
     });
 
 Route::get('/welcome/{username}', static function(string $username): string {
     return "Hello, {$username}";
 });
+
+Auth::routes();
