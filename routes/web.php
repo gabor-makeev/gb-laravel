@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\ParserController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\HomeController;
@@ -78,6 +79,7 @@ Route::prefix('admin')->name('admin.')
                 Route::put('/updateIsAdmin/{user}', [AdminUserController::class, 'updateIsAdmin'])
                     ->name('updateIsAdmin');
             });
+        Route::get('parser', ParserController::class)->name('parser');
     });
 
 Route::get('/welcome/{username}', static function(string $username): string {
