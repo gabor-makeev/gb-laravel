@@ -4,82 +4,60 @@ namespace App\Http\Controllers\Admin;
 
 use App\Enums\News\Status;
 use App\Http\Controllers\Controller;
-use App\Models\Category;
 use App\Models\News;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Models\Resource;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class ParserController extends Controller
 {
-    private array $resources = [
-        'ign' => 'https://feeds.feedburner.com/ign/all',
-        'cbsnews' => 'https://www.cbsnews.com/latest/rss/entertainment'
-    ];
-
     public function __invoke(Request $request): RedirectResponse
     {
-        foreach ($this->resources as $resourceName => $resourceUrl) {
-            $xml = simplexml_load_file($resourceUrl);
+        $resources = Resource::all();
 
-            $postCategory = $this->getPostCategory($resourceName);
+        foreach ($resources as $resource) {
+            $xml = simplexml_load_file($resource->url);
 
-            foreach ($xml->channel->item as $postXml) {
-                $postArray = (array) $postXml;
-                $postXmlContent = (string) $postXml->children('content', true)->encoded;
-                $postXmlImageUrl = (string) $postXml->children('media', true)->attributes()?->url;
-                $postXmlAuthor = (string) $postXml->children('dc', true)->creator;
+            foreach ($xml->channel->item as $item) {
+                $post = (array) $item;
+                $post = array_map('strval', $post);
 
-                $postArray = array_map('strval', $postArray);
+                $content = (string) $item->children('content', true)->encoded;
 
-                if (!$postXmlContent) {
-                    $postXmlContent = $postArray['description'];
-                    $postArray['description'] = null;
+                if (!$content) {
+                    $content = $post['description'];
+                    $post['description'] = null;
                 }
 
-                if (!$postXmlImageUrl) {
-                    $postXmlImageUrl = $postArray['image'];
+                $imageUrl = (string) $item->children('media', true)->attributes()?->url;
+
+                if (!$imageUrl) {
+                    $imageUrl = $post['image'] ?? null;
                 }
 
-                if (!$postXmlAuthor) {
-                    $postXmlAuthor = $resourceName;
+                $author = (string) $item->children('dc', true)->creator;
+
+                if (!$author) {
+                    $author = 'Unknown';
                 }
 
-                $postArray['content'] = $postXmlContent;
-                $postArray['image_url'] = $postXmlImageUrl;
-                $postArray['author'] = $postXmlAuthor;
-                $postArray['category_id'] = $postCategory->id;
+                $post['content'] = $content;
+                $post['image_url'] = $imageUrl;
+                $post['author'] = $author;
+                $post['category_id'] = $resource->category->id;
 
-                $post = new News($postArray);
-
-                $post->status = Status::ACTIVE->value;
-                $post->save();
+                News::firstOrCreate([
+                    'title' => $post['title'],
+                    'description' => $post['description'],
+                    'content' => $post['content'],
+                    'image_url' => $post['image_url'],
+                    'category_id' => $post['category_id'],
+                    'status' => Status::ACTIVE->value,
+                    'author' => $post['author']
+                ]);
             }
         }
 
         return redirect(route('admin.news.index'));
-    }
-
-    private function getPostCategory(string $resourceName): Category
-    {
-        $postCategoryName = $this->definePostCategoryName($resourceName);
-
-        try {
-            $postCategory = Category::where('name', $postCategoryName)->firstOrFail();
-        } catch (ModelNotFoundException) {
-            $postCategory = new Category(['name' => $postCategoryName]);
-            $postCategory->save();
-        }
-
-        return $postCategory;
-    }
-
-    private function definePostCategoryName(string $resourceName): string
-    {
-        return match ($resourceName) {
-            'ign' => 'video games',
-            'cbsnews' => 'entertainment',
-            default => 'off-topic',
-        };
     }
 }
